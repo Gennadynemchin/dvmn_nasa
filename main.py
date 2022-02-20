@@ -5,11 +5,10 @@ from urllib.parse import urlparse
 from requests.models import HTTPError
 
 
-def get_pic():
-    Path("images").mkdir(parents=True, exist_ok=True)
-    filename = 'images/hubble.jpeg'
-    url = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg'
-    response = requests.get(url)
+def get_pic(url_pic, destination_folder):
+    Path(destination_folder).mkdir(parents=True, exist_ok=True)
+    filename = f'{destination_folder}/hubble.jpeg'
+    response = requests.get(url_pic)
     response.raise_for_status()
 
     with open(filename, 'wb') as file:
@@ -18,7 +17,7 @@ def get_pic():
 
 
 def main():
-        get_pic()
+        get_pic('https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg', 'images')
 
 
 if __name__ == '__main__':
