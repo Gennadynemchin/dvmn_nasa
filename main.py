@@ -25,13 +25,10 @@ def get_last_spacex(destination_folder):
     decoded_response = response.json()
     last_launch_pics = decoded_response[spacex_launch_counter]['links']['flickr_images']
 
-    if len(last_launch_pics) > 0:
-        for x in last_launch_pics:
-            with open(filename, 'wb') as file:
-                file.write(x)
-    else:
+    while len(last_launch_pics) < 1:
         spacex_launch_counter -= 1
-    return response.ok
+        last_launch_pics = decoded_response[spacex_launch_counter]['links']['flickr_images']
+        print(last_launch_pics)
 
 def main():
     #get_pic('https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg', 'images')
