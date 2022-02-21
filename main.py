@@ -17,7 +17,7 @@ def get_pic(url_pic, destination_folder):
     return response.ok
 
 
-def get_last_spacex(destination_folder):
+def fetch_spacex_last_launch(destination_folder):
     Path(destination_folder).mkdir(parents=True, exist_ok=True)
     spacex_launch_counter = -1
     response = requests.get('https://api.spacexdata.com/v3/launches/past')
@@ -46,7 +46,7 @@ def get_last_spacex(destination_folder):
 
 def main():
     #get_pic('https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg', 'images')
-    get_last_spacex('spacex')
+    fetch_spacex_last_launch('spacex')
 
 if __name__ == '__main__':
     main()
