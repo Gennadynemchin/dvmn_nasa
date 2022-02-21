@@ -1,3 +1,4 @@
+import datetime
 import requests
 import json
 import os
@@ -19,7 +20,6 @@ def get_pic(url_pic, destination_folder):
 def get_last_spacex(destination_folder):
     Path(destination_folder).mkdir(parents=True, exist_ok=True)
     spacex_launch_counter = -1
-    filename = f'{destination_folder}/spacex_launch_{spacex_launch_counter}.jpeg'
     response = requests.get('https://api.spacexdata.com/v3/launches/past')
     response.raise_for_status()
     decoded_response = response.json()
@@ -29,6 +29,20 @@ def get_last_spacex(destination_folder):
         spacex_launch_counter -= 1
         last_launch_pics = decoded_response[spacex_launch_counter]['links']['flickr_images']
         print(last_launch_pics)
+
+    Path(destination_folder).mkdir(parents=True, exist_ok=True)
+
+    for x in last_launch_pics:
+        print(x)
+        filename = f'{destination_folder}/spacex_launch_{datetime.datetime.now().time()}.jpeg'
+        response = requests.get(x)
+        response.raise_for_status()
+
+        with open(filename, 'wb') as file:
+            file.write(response.content)
+
+    return response.ok
+
 
 def main():
     #get_pic('https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg', 'images')
