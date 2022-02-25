@@ -55,6 +55,11 @@ def nasa_apod(destination_folder, nasa_token):
     return decoded_response
 
 
+def get_extension(link):
+
+    return
+
+
 def main():
     load_dotenv()
     nasa_token = os.getenv('NASATOKEN')
