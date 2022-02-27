@@ -56,16 +56,19 @@ def nasa_apod(destination_folder, nasa_token):
 
 
 def get_extension(link):
+    result = urlparse(link).path
+    ext = os.path.splitext(result)[1]
 
-    return
+    return ext
 
 
 def main():
     load_dotenv()
-    nasa_token = os.getenv('NASATOKEN')
+    #nasa_token = os.getenv('NASATOKEN')
     #get_pic('https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg', 'images')
     #fetch_spacex_last_launch('spacex')
-    print(nasa_apod('nasa_apod', nasa_token))
+    #print(nasa_apod('nasa_apod', nasa_token))
+    print(get_extension('https://example.com/txt/hello%20world.txt?v=9#python'))
 
 if __name__ == '__main__':
     main()
