@@ -53,17 +53,20 @@ def nasa_apod(destination_folder, nasa_token):
     decoded_response = response.json()
 
     for x in decoded_response:
-        apod_link = x['url']
-        #apod_link_parsed = urlparse(apod_link)
-        pathname, extension = os.path.splitext(apod_link)
-        filename = pathname.split('/')
-        response = requests.get(apod_link)
-        response.raise_for_status()
-        file_path = f'{destination_folder}/nasa_apod_{filename[-1]}{extension}'
+        try:
+            apod_link = x['url']
+            print('ok', apod_link)
+        except KeyError:
+            pass
+        else:
+            pathname, extension = os.path.splitext(apod_link)
+            filename = pathname.split('/')
+            response = requests.get(apod_link)
+            response.raise_for_status()
+            file_path = f'{destination_folder}/nasa_apod_{filename[-1]}{extension}'
 
-        with open(file_path, 'wb') as file:
-            file.write(response.content)
-
+            with open(file_path, 'wb') as file:
+                file.write(response.content)
     return response.ok
 
 
@@ -75,7 +78,6 @@ def nasa_epic(destination_folder, nasa_token):
 def get_extension(link):
     result = urlparse(link).path
     ext = os.path.splitext(result)[1]
-
     return ext
 
 
