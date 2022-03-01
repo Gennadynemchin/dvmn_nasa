@@ -47,23 +47,29 @@ def fetch_spacex_last_launch(destination_folder):
 
 def nasa_apod(destination_folder, nasa_token):
     Path(destination_folder).mkdir(parents=True, exist_ok=True)
-    params = {'api_key' : nasa_token, 'count': 10}
+    params = {'api_key' : nasa_token, 'count': 100}
     response = requests.get('https://api.nasa.gov/planetary/apod', params=params)
     response.raise_for_status()
     decoded_response = response.json()
 
     for x in decoded_response:
         apod_link = x['url']
-        apod_link_parsed = urlparse(apod_link)
-        filename = os.path.basename(apod_link_parsed.path)
+        #apod_link_parsed = urlparse(apod_link)
+        pathname, extension = os.path.splitext(apod_link)
+        filename = pathname.split('/')
         response = requests.get(apod_link)
         response.raise_for_status()
-        file_path = f'{destination_folder}/spacex_launch_{filename}.jpeg'
+        file_path = f'{destination_folder}/nasa_apod_{filename[-1]}{extension}'
 
         with open(file_path, 'wb') as file:
             file.write(response.content)
 
     return response.ok
+
+
+def nasa_epic(destination_folder, nasa_token):
+
+    return
 
 
 def get_extension(link):
