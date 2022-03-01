@@ -47,12 +47,23 @@ def fetch_spacex_last_launch(destination_folder):
 
 def nasa_apod(destination_folder, nasa_token):
     Path(destination_folder).mkdir(parents=True, exist_ok=True)
-    params = {'api_key' : nasa_token}
+    params = {'api_key' : nasa_token, 'count': 10}
     response = requests.get('https://api.nasa.gov/planetary/apod', params=params)
     response.raise_for_status()
     decoded_response = response.json()
 
-    return decoded_response
+    for x in decoded_response:
+        apod_link = x['url']
+        apod_link_parsed = urlparse(apod_link)
+        filename = os.path.basename(apod_link_parsed.path)
+        response = requests.get(apod_link)
+        response.raise_for_status()
+        file_path = f'{destination_folder}/spacex_launch_{filename}.jpeg'
+
+        with open(file_path, 'wb') as file:
+            file.write(response.content)
+
+    return response.ok
 
 
 def get_extension(link):
@@ -64,11 +75,12 @@ def get_extension(link):
 
 def main():
     load_dotenv()
-    #nasa_token = os.getenv('NASATOKEN')
+    nasa_token = os.getenv('NASATOKEN')
+
     #get_pic('https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg', 'images')
     #fetch_spacex_last_launch('spacex')
-    #print(nasa_apod('nasa_apod', nasa_token))
-    print(get_extension('https://example.com/txt/hello%20world.txt?v=9#python'))
+    nasa_apod('nasa_apod', nasa_token)
+    #print(get_extension('"https://example.com/txt/hello%20world.txt?v=9#python"'))
 
 if __name__ == '__main__':
     main()
