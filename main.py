@@ -71,8 +71,30 @@ def nasa_apod(destination_folder, nasa_token):
 
 
 def nasa_epic(destination_folder, nasa_token):
+    Path(destination_folder).mkdir(parents=True, exist_ok=True)
+    url = 'https://api.nasa.gov/EPIC/api/natural/images'
+    params = {'api_key': nasa_token}
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    decoded_response = response.json()
 
-    return
+    for x in decoded_response:
+        image = x['image']
+        date_time_str = x['date']
+        date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S')
+        year, month, day = date_time_obj.year, '%02d'%date_time_obj.month, '%02d'%date_time_obj.day
+        url_pic = f'https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{image}.png'
+        pathname, extension = os.path.splitext(url_pic)
+        print(pathname)
+        filename = pathname.split('/')
+        response_pic = requests.get(url_pic, params=params)
+        response_pic.raise_for_status()
+        file_path = f'{destination_folder}/nasa_epic_{filename[-1]}{extension}'
+
+        with open(file_path, 'wb') as file:
+            file.write(response_pic.content)
+    return response.ok
+
 
 
 def get_extension(link):
@@ -87,8 +109,9 @@ def main():
 
     #get_pic('https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg', 'images')
     #fetch_spacex_last_launch('spacex')
-    nasa_apod('nasa_apod', nasa_token)
+    #nasa_apod('nasa_apod', nasa_token)
     #print(get_extension('"https://example.com/txt/hello%20world.txt?v=9#python"'))
+    print(nasa_epic('nasa_epic', nasa_token))
 
 if __name__ == '__main__':
     main()
