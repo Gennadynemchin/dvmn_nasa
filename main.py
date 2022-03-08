@@ -1,6 +1,9 @@
 import datetime
 import requests
+import logging
+import telegram
 import os
+from bot import upload_pic
 from dotenv import load_dotenv
 from urllib.parse import urlparse
 from pathlib import Path
@@ -43,7 +46,7 @@ def fetch_spacex_last_launch(destination_folder):
 
 def nasa_apod(destination_folder, nasa_token):
     Path(destination_folder).mkdir(parents=True, exist_ok=True)
-    params = {'api_key': nasa_token, 'count': 100}
+    params = {'api_key': nasa_token, 'count': 30}
     response = requests.get('https://api.nasa.gov/planetary/apod', params=params)
     response.raise_for_status()
     decoded_response = response.json()
@@ -99,12 +102,22 @@ def get_extension(link):
 def main():
     load_dotenv()
     nasa_token = os.getenv('NASATOKEN')
+    destination_folder = os.getenv('DESTINATION_FOLDER')
+    telegram_token = os.getenv('TELEGRAM_TOKEN')
+    telegram_channel = os.getenv('TELEGRAM_CHANNEL')
+    delay = int(os.getenv('SENDING_DELAY'))
 
-    # get_pic('https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg', 'images')
-    fetch_spacex_last_launch('spacex')
-    nasa_apod('nasa_apod', nasa_token)
-    # print(get_extension('"https://example.com/txt/hello%20world.txt?v=9#python"'))
-    nasa_epic('nasa_epic', nasa_token)
+    bot = telegram.Bot(token=telegram_token)
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+    logger = logging.getLogger(__name__)
+
+    get_pic('https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg', destination_folder)
+    fetch_spacex_last_launch(destination_folder)
+    nasa_apod(destination_folder, nasa_token)
+    nasa_epic(destination_folder, nasa_token)
+
+    while True:
+        upload_pic(bot, destination_folder, telegram_channel, delay)
 
 
 if __name__ == '__main__':
