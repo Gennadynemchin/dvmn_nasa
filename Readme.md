@@ -14,10 +14,8 @@ TELEGRAM_TOKEN='<TOKEN YOU GOT FROM THE @BOTFATHER OF TELEGRAM>'
 TELEGRAM_CHANNEL='@YOUR_TELEGRAM_CHANNEL'
 SENDING_DELAY='DELAY BETWEEN PICTURE POSTING IN SECONDS'
 ```
-Please see how to generate you NASA API token here:
-```
-https://api.nasa.gov/
-```
+Please see how to generate you NASA API token here: https://api.nasa.gov/
+
 After that just create a Telegram channel and add your bot to administrators.
 
 ### How to install
