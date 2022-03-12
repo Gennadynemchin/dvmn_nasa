@@ -1,5 +1,7 @@
 import datetime
 import requests
+import posixpath
+import urllib.parse
 import os
 from pathlib import Path
 
@@ -14,11 +16,12 @@ def get_nasa_apod(destination_folder, nasa_token):
     for to_download in decoded_response:
         try:
             apod_link = to_download.get('hdurl')
-            pathname, extension = os.path.splitext(apod_link)
-            filename = pathname.split('/')
+
+            filename = posixpath.basename(urllib.parse.unquote(apod_link))
+            #extension = os.path.splitext(filename)[-1]
             response = requests.get(apod_link)
             response.raise_for_status()
-            file_path = f'{destination_folder}/nasa_apod_{filename[-1]}{extension}'
+            file_path = f'{destination_folder}/nasa_apod_{filename}'
         except TypeError:
             pass
         else:
@@ -41,12 +44,11 @@ def get_nasa_epic(destination_folder, nasa_token):
             date_time_str = to_download.get('date')
             date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S')
             year, month, day = date_time_obj.year, '%02d' % date_time_obj.month, '%02d' % date_time_obj.day
-            url_pic = f'https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{image}.png'
-            pathname, extension = os.path.splitext(url_pic)
-            filename = pathname.split('/')
-            response_pic = requests.get(url_pic, params=params)
+            urlpath = f'https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{image}.png'
+            filename = posixpath.basename(urllib.parse.unquote(urlpath))
+            response_pic = requests.get(urlpath, params=params)
             response_pic.raise_for_status()
-            file_path = f'{destination_folder}/nasa_epic_{filename[-1]}{extension}'
+            file_path = f'{destination_folder}/nasa_epic_{filename}'
         except TypeError:
             pass
         else:

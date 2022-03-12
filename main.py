@@ -14,7 +14,6 @@ def main():
     telegram_token = os.getenv('TELEGRAM_TOKEN')
     telegram_channel = os.getenv('TELEGRAM_CHANNEL')
     delay = int(os.getenv('SENDING_DELAY'))
-
     bot = telegram.Bot(token=telegram_token)
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
     logger = logging.getLogger(__name__)
