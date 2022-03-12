@@ -29,10 +29,6 @@ Create and activate a virtual environment:
 python3 -m venv env
 source env/bin/activate
 ```
-Install requirements:
-```
-pip install -r requirements.txt
-```
 Python3 should be already installed. 
 Then use `pip` (or `pip3`, if there is a conflict with Python2) to install dependencies:
 ```
