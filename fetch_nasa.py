@@ -8,7 +8,7 @@ from pathlib import Path
 
 def get_nasa_apod(destination_folder, nasa_token):
     Path(destination_folder).mkdir(parents=True, exist_ok=True)
-    params = {'api_key': nasa_token, 'count': 30}
+    params = {'api_key': nasa_token, 'count': 7}
     response = requests.get('https://api.nasa.gov/planetary/apod', params=params)
     response.raise_for_status()
     decoded_response = response.json()
