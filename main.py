@@ -6,9 +6,15 @@ from fetch_nasa import get_nasa_apod, get_nasa_epic
 from fetch_spacex import get_spacex_last_launch
 from time import sleep
 
+import logging
+
 
 def main():
     load_dotenv()
+
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+    logger = logging.getLogger(__name__)
+
     nasa_token = os.getenv('NASATOKEN')
     destination_folder = os.getenv('DESTINATION_FOLDER')
     telegram_token = os.getenv('TELEGRAM_TOKEN')
@@ -22,7 +28,6 @@ def main():
     while True:
         upload_pic(bot, destination_folder, telegram_channel)
         sleep(delay)
-
 
 
 if __name__ == '__main__':
