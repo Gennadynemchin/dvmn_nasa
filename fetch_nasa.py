@@ -2,7 +2,6 @@ import datetime
 import requests
 import posixpath
 import urllib.parse
-import os
 from pathlib import Path
 
 
