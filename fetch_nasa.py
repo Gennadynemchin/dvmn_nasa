@@ -13,18 +13,13 @@ def get_nasa_apod(destination_folder, nasa_token):
     decoded_response = response.json()
 
     for to_download in decoded_response:
-        try:
-            apod_link = to_download.get('hdurl')
-
-            filename = posixpath.basename(urllib.parse.unquote(apod_link))
-            response = requests.get(apod_link)
-            response.raise_for_status()
-            file_path = f'{destination_folder}/nasa_apod_{filename}'
-        except TypeError:
-            pass
-        else:
-            with open(file_path, 'wb') as file:
-                file.write(response.content)
+        apod_link = to_download.get('hdurl')
+        filename = posixpath.basename(urllib.parse.unquote(apod_link))
+        response = requests.get(apod_link)
+        response.raise_for_status()
+        file_path = f'{destination_folder}/nasa_apod_{filename}'
+        with open(file_path, 'wb') as file:
+            file.write(response.content)
     return response.ok
 
 
